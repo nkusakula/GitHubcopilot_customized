@@ -116,7 +116,7 @@ export default function Products() {
                   onClick={() => handleProductClick(product)}
                 >
                   <img 
-                    src={`/${product.imgName}`} 
+                    src={`/images/${product.imgName}`} 
                     alt={product.name}
                     className="w-full h-full object-contain p-2"
                   />
@@ -209,7 +209,7 @@ export default function Products() {
             </div>
             <div className={`${darkMode ? 'bg-gradient-to-t from-gray-700 to-gray-800' : 'bg-gradient-to-t from-gray-100 to-white'} rounded-lg mb-6 p-4`}>
               <img 
-                src={`/${selectedProduct.imgName}`} 
+                src={`/images/${selectedProduct.imgName}`} 
                 alt={selectedProduct.name}
                 className="w-full h-auto object-contain max-h-[400px]"
               />

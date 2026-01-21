@@ -46,7 +46,7 @@ export default function Welcome() {
           {/* Hero Image */}
           <div className="w-full max-w-7xl mx-auto">
             <img
-              src="/hero.png"
+              src="/images/hero.png"
               alt="Smart Cat Products powered by AI"
               className="w-full h-auto rounded-lg"
             />

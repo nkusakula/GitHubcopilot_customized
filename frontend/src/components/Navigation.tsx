@@ -15,7 +15,7 @@ export default function Navigation() {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/copilot.png" 
+                src="/images/copilot.png" 
                 alt="Copilot icon"
                 className="h-8 w-auto"
               />
