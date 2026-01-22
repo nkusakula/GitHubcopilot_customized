@@ -59,7 +59,7 @@ export default function Welcome() {
                 <span className="text-primary-700 dark:text-primary-300 font-semibold">Powered by Advanced AI</span>
               </div>
               <h1 className={`text-5xl font-bold mb-6 leading-tight ${darkMode ? 'text-white' : 'text-gray-800'} transition-colors duration-300`}>
-                Smart Cat Tech.<br />Purrsonalized.
+                Smart Cat Tech.<br />Personalized.
               </h1>
               <p className={`${darkMode ? 'text-gray-200' : 'text-gray-700'} mb-8 text-lg transition-colors duration-300`}>
                 OctoCAT Supply brings cutting-edge AI technology to enhance your cat's life. Our premium smart products learn from your feline friend's behavior to provide personalized experiences, health insights, and next-level entertainment.
