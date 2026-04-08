@@ -1,53 +1,74 @@
 ---
-applyTo: "**/*.md,api/src/**/*.ts,README.md"
+description: "Use when writing or updating documentation: docs/ markdown files (architecture, build, deployment), JSDoc/TSDoc comments in TypeScript source files, or README sections. Covers structure, tone, and project-specific conventions."
+applyTo: "docs/**/*.md, **/*.ts, **/*.tsx, README.md"
 ---
 
-# Documentation Writing Guidelines
+# Documentation Writing Standards
 
-## Markdown Documents (`*.md`)
+## General Principles
+- Be brief and scannable — prefer headings, bullet points, and code blocks over prose
+- Write for someone unfamiliar with the codebase; avoid assuming context
+- Sentences should be short and active voice ("Run `npm install`" not "Dependencies should be installed by running...")
+- Do not duplicate content — link to the canonical source instead
+
+## docs/ Markdown Files
 
 ### Structure
-- Every document starts with a single H1 (`#`) title that clearly names the document.
-- Use H2 (`##`) for major sections and H3 (`###`) for subsections. Do not create H4+ levels.
-- Place a short, plain-English introduction paragraph directly under the H1 — before any section headings — to state the document's purpose.
-- When a doc has four or more sections, add a link list at the top after the intro (e.g., `## Prerequisites · ## Installation · ...`).
+- Start every doc with a single `# H1` title and a one-sentence description of the document's purpose
+- Use `##` sections for major topics; `###` for sub-topics — never skip levels
+- Place prerequisites, environment setup, and caveats **before** any commands or code
+- End procedural guides with a "Troubleshooting" or "Common Issues" section where applicable
 
 ### Code Blocks
-- Always tag fenced code blocks with a language (` ```typescript`, ` ```bash`, ` ```json`, ` ```mermaid`).
-- Use `bash` consistently for CLI commands — not `sh`, `shell`, or `console`.
-- Group related commands in a single block with inline comments (`#`) explaining each group.
-- Prefer multi-line code blocks over inline backticks for anything longer than one expression.
+- Always specify the language for fenced code blocks (` ```bash `, ` ```typescript `, etc.)
+- Show the full command including the working directory context where it matters
+- Prefer real commands from the project over placeholder examples:
+  ```bash
+  # Good — uses actual project commands
+  npm run dev:api
+
+  # Avoid — vague placeholders
+  npm run <your-command>
+  ```
 
 ### Diagrams
-- Use Mermaid (` ```mermaid`) for architecture, data flow, and entity relationship diagrams.
-- Use `flowchart TD` for component/flow diagrams; use `erDiagram` for data models.
-- Add a short sentence above each diagram describing what it shows.
+- Use Mermaid for architecture and flow diagrams (already used in `docs/architecture.md`)
+- Keep diagrams focused — one diagram per concept; do not combine ERD + flow in one chart
+- Always add a prose summary below a diagram explaining what it shows
 
-### Links & References
-- Link to related docs using relative paths: `[Architecture](../docs/architecture.md)`.
-- Never use absolute URLs for files within this repository.
-- When referencing source files, link to the file path relative to the workspace root.
+### Linking
+- Link to related docs using relative paths: `[Architecture](./architecture.md)`
+- Link to relevant source files where documentation references them: `[seedData.ts](../api/src/seedData.ts)`
+- Reference the key docs in the copilot-instructions.md header when adding a new doc
 
-### Tone & Style
-- Use second person ("you" / imperative) for how-to guides and runbooks ("Run `npm install`").
-- Use third person for reference and architecture docs.
-- Write in plain English. Define acronyms on first use.
-- Avoid filler phrases like "simply", "just", "easy", or "straightforward".
+## JSDoc / TSDoc in TypeScript
 
----
+### When to Add Comments
+- **Always**: exported interfaces, types, and functions in `api/src/models/` and `api/src/routes/`
+- **Always**: non-obvious logic (e.g., seed data reset pattern, query invalidation workarounds)
+- **Skip**: trivial getters, simple event handlers, and self-explanatory one-liners
 
-## API Code Documentation (TypeScript — `api/src/`)
+### Format
+Use TSDoc-compatible tags:
 
-### Swagger / OpenAPI Annotations
-- Every model interface in `api/src/models/` must have a `@swagger` JSDoc block that defines the full OpenAPI schema component, including all properties and their types.
-- Every route handler in `api/src/routes/` must have a `@swagger` JSDoc block for each HTTP method, documenting: summary, parameters (path and query), request body schema, and all meaningful response codes (200, 201, 400, 404).
-- Use `$ref` to reference shared schema components rather than repeating inline definitions.
+```typescript
+/**
+ * Returns a filtered list of products matching the search term.
+ *
+ * @param term - Case-insensitive substring to match against name and description
+ * @returns Filtered product array, or empty array if no matches
+ */
+function filterProducts(products: Product[], term: string): Product[] { ... }
+```
 
-### JSDoc Comments
-- Add JSDoc (`/** */`) to exported functions and interfaces only when the purpose or usage is not immediately clear from the name and types alone.
-- Use `@param` and `@returns` tags for non-trivial utility functions.
-- Do not add JSDoc to route handler callbacks (`(req, res) => ...`) — that documentation lives in the `@swagger` block.
+- One blank line between the summary and `@param`/`@returns` tags
+- `@param` names must match actual parameter names exactly
+- Include `@remarks` for non-obvious behavior (e.g., side effects, resets)
 
-### Inline Comments
-- Do not comment on *what* code does — only on *why* a non-obvious decision was made.
-- Delete commented-out code before committing; use version control history instead.
+### Swagger / Route Comments
+For `api/src/routes/*.ts`, Swagger JSDoc annotations are the documentation — keep them in sync with the TypeScript interface in `api/src/models/*.ts`. See existing routes (e.g., `branch.ts`) for the canonical annotation style.
+
+## Project-Specific Conventions
+- This is a **demo project** — acknowledge demo/simplification trade-offs explicitly in docs rather than omitting caveats (e.g., "In-memory only; data resets on restart")
+- Reference the ERD in `docs/architecture.md` when documenting entity relationships
+- Use "OctoCAT Supply Chain" (not "OctoCat" or "Octocat") as the product name in all docs

@@ -75,21 +75,7 @@ Registered routes in `api/src/index.ts`:
 ### Test Pattern (Vitest + Supertest)
 Reference implementation: [api/src/routes/branch.test.ts](api/src/routes/branch.test.ts)
 
-```typescript
-import { describe, it, expect, beforeEach } from 'vitest';
-import request from 'supertest';
-import express from 'express';
-import router, { resetBranches } from './branch'; // export name is reset{Entity}
-
-let app: express.Express;
-
-beforeEach(() => {
-  app = express();
-  app.use(express.json());
-  app.use('/branches', router);
-  resetBranches(); // CRITICAL: restore seed data between tests
-});
-```
+**CRITICAL**: Every `beforeEach` must call `reset{Entity}()` (e.g., `resetBranches()`) — each route file exports this function to restore seed data and prevent state leaking between tests.
 
 ### Adding New Entities
 1. Create model interface in `api/src/models/{entity}.ts` with Swagger schema
@@ -117,19 +103,7 @@ beforeEach(() => {
 ### Data Fetching
 Uses react-query v3 with axios. Reference: [frontend/src/components/entity/product/Products.tsx](frontend/src/components/entity/product/Products.tsx)
 
-```typescript
-import axios from 'axios';
-import { useQuery } from 'react-query';
-import { api } from '../../../api/config';
-
-const fetchProducts = async () => {
-  const { data } = await axios.get(`${api.baseURL}${api.endpoints.products}`);
-  return data;
-};
-const { data, isLoading, error } = useQuery('products', fetchProducts);
-```
-
-> **Note**: Mutations don't automatically invalidate queries. Call `queryClient.invalidateQueries('{entity}')` after POST/PUT/DELETE.
+Fetch via `axios.get(\`${api.baseURL}${api.endpoints.{entity}}\`)` inside a `useQuery` hook. **CRITICAL**: Mutations don't auto-invalidate queries — call `queryClient.invalidateQueries('{entity}')` after POST/PUT/DELETE.
 
 ### Styling
 - Tailwind CSS with dark mode support via `ThemeContext`
@@ -138,13 +112,7 @@ const { data, isLoading, error } = useQuery('products', fetchProducts);
 - Product images stored in `frontend/public/images/`; referenced via `imgName` field in seed data
 
 ## CORS Configuration
-API accepts requests from:
-- `http://localhost:5137` (frontend dev server)
-- `http://localhost:3001`
-- `*.app.github.dev` (Codespaces)
-- Custom origins via `API_CORS_ORIGINS` env var (comma-separated)
-
-In Codespaces, `frontend/src/api/config.ts` auto-detects the environment via `window.RUNTIME_CONFIG.API_URL`. Set this env var if the frontend can't reach the API.
+API allows `localhost:5137`, `localhost:3001`, and `*.app.github.dev` by default. Add custom origins via `API_CORS_ORIGINS` env var (comma-separated). In Codespaces, the frontend auto-detects the API URL via `window.RUNTIME_CONFIG.API_URL`.
 
 ## Known Pitfalls
 - **Data resets on restart**: In-memory store has no persistence — expected for demo
@@ -162,3 +130,6 @@ In Codespaces, `frontend/src/api/config.ts` auto-detects the environment via `wi
 | [plan](.github/prompts/plan.prompt.md) | `/plan` | Plan code changes without implementing; produces implementation plan doc |
 | [model](.github/prompts/model.prompt.md) | `/model` | Select best LLM for a given task; fetches live GitHub docs |
 | [ImplementationIdeas](.github/agents/ImplementationIdeas.agent.md) | `@ImplementationIdeas` | Creative feature exploration; searches code and external repos |
+| [API Architect](.github/agents/api-architect.agent.md) | `@API Architect` | Mentors on API design decisions; provides guidance and working code |
+
+> **File instructions**: [.github/instructions/reactjs-instructions.instructions.md](.github/instructions/reactjs-instructions.instructions.md) auto-applies React/TS best practices to all `*.tsx`, `*.ts`, `*.jsx`, `*.js`, `*.css` files.
