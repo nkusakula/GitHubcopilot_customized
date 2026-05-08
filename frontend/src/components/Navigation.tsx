@@ -4,12 +4,14 @@ import { useTheme } from '../context/ThemeContext';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 
+const MAX_CART_DISPLAY_COUNT = 99;
+
 export default function Navigation() {
   const { isLoggedIn, isAdmin, logout } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
   const { totalItems } = useCart();
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
-  const cartCountLabel = totalItems > 99 ? '99+' : totalItems.toString();
+  const cartCountLabel = totalItems > MAX_CART_DISPLAY_COUNT ? `${MAX_CART_DISPLAY_COUNT}+` : totalItems.toString();
 
   return (
     <nav className={`${darkMode ? 'bg-dark/95' : 'bg-white/95'} backdrop-blur-sm fixed w-full z-50 shadow-md transition-colors duration-300`}>
@@ -79,6 +81,7 @@ export default function Navigation() {
               className={`relative p-2 rounded-full ${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} transition-colors`}
               aria-label="View cart"
             >
+              <span className="sr-only" aria-live="polite">Cart has {totalItems} items</span>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M2.25 3a.75.75 0 000 1.5h1.386l2.13 9.49A2.25 2.25 0 008 15.75h8.69a2.25 2.25 0 002.207-1.825l1.02-5.75A.75.75 0 0019.18 7.5H5.375l-.29-1.29A.75.75 0 004.353 6H2.25zm6.5 15a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zm7 0a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" />
               </svg>
