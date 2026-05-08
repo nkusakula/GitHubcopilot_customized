@@ -1,4 +1,4 @@
-import { useCart } from '../context/CartContext';
+import { getDiscountedPrice, useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Cart() {
@@ -25,7 +25,7 @@ export default function Cart() {
 
         <div className="space-y-4">
           {cartItems.map(item => {
-            const itemPrice = item.discount ? item.price * (1 - item.discount) : item.price;
+            const itemPrice = getDiscountedPrice(item.price, item.discount);
             return (
               <div
                 key={item.productId}

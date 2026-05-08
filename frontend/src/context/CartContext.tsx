@@ -10,6 +10,14 @@ export interface CartItem {
   quantity: number;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const getDiscountedPrice = (price: number, discount?: number) => {
+  if (discount === undefined) return price;
+  const normalizedDiscount = discount > 1 ? discount / 100 : discount;
+  const safeDiscount = Math.min(Math.max(normalizedDiscount, 0), 1);
+  return price * (1 - safeDiscount);
+};
+
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, 'quantity'>, quantity: number) => void;
@@ -63,8 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const totalPrice = useMemo(
     () =>
       cartItems.reduce((sum, item) => {
-        const discountedPrice = item.discount ? item.price * (1 - item.discount) : item.price;
-        return sum + discountedPrice * item.quantity;
+        return sum + getDiscountedPrice(item.price, item.discount) * item.quantity;
       }, 0),
     [cartItems]
   );
