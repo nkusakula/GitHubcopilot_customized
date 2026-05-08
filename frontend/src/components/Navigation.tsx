@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useState } from 'react';
+import { useCart } from '../context/CartContext';
 
 export default function Navigation() {
   const { isLoggedIn, isAdmin, logout } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
+  const { totalItems } = useCart();
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
 
   return (
@@ -29,6 +31,9 @@ export default function Navigation() {
             <div className="ml-10 flex items-baseline space-x-4">
               <Link to="/" className={`${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>Home</Link>
               <Link to="/products" className={`${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>Products</Link>
+              <Link to="/cart" className={`${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>
+                Cart ({totalItems})
+              </Link>
               <Link to="/about" className={`${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} px-3 py-2 rounded-md text-sm font-medium transition-colors`}>About us</Link>
               {isAdmin && (
                 <div className="relative">
@@ -68,6 +73,20 @@ export default function Navigation() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
+            <Link
+              to="/cart"
+              className={`relative p-2 rounded-full ${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} transition-colors`}
+              aria-label="View cart"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2.25 3a.75.75 0 000 1.5h1.386l2.13 9.49A2.25 2.25 0 008 15.75h8.69a2.25 2.25 0 002.207-1.825l1.02-5.75A.75.75 0 0019.18 7.5H5.375l-.29-1.29A.75.75 0 004.353 6H2.25zm6.5 15a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5zm7 0a1.25 1.25 0 100 2.5 1.25 1.25 0 000-2.5z" />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full focus:outline-none transition-colors"
