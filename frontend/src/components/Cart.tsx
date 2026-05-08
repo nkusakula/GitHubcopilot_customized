@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { useCart, CartItem } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 
+const getEffectivePrice = (item: CartItem): number =>
+  item.discount ? item.price * (1 - item.discount) : item.price;
+
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, cartTotal, itemCount } = useCart();
   const { darkMode } = useTheme();
@@ -82,9 +85,7 @@ export default function Cart() {
 
         <div className="space-y-4 mb-8">
           {cartItems.map((item: CartItem) => {
-            const effectivePrice = item.discount
-              ? item.price * (1 - item.discount)
-              : item.price;
+            const effectivePrice = getEffectivePrice(item);
             const lineTotal = effectivePrice * item.quantity;
 
             return (
@@ -159,9 +160,7 @@ export default function Cart() {
           <h2 className={`text-xl font-bold ${darkMode ? 'text-light' : 'text-gray-800'} mb-4`}>Order Summary</h2>
           <div className="space-y-2 mb-4">
             {cartItems.map((item: CartItem) => {
-              const effectivePrice = item.discount
-                ? item.price * (1 - item.discount)
-                : item.price;
+              const effectivePrice = getEffectivePrice(item);
               return (
                 <div key={item.productId} className="flex justify-between">
                   <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate max-w-xs`}>

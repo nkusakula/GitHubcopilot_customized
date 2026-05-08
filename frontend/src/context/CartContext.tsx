@@ -21,6 +21,9 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null);
 
+const getEffectivePrice = (item: CartItem): number =>
+  item.discount ? item.price * (1 - item.discount) : item.price;
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
@@ -55,10 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clearCart = () => setCartItems([]);
 
   const cartTotal = cartItems.reduce((sum, item) => {
-    const effectivePrice = item.discount
-      ? item.price * (1 - item.discount)
-      : item.price;
-    return sum + effectivePrice * item.quantity;
+    return sum + getEffectivePrice(item) * item.quantity;
   }, 0);
 
   const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
