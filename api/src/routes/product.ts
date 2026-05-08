@@ -107,6 +107,10 @@ const router = express.Router();
 
 let products: Product[] = [...seedProducts];
 
+export function resetProducts() {
+  products = [...seedProducts];
+}
+
 // Create a new product
 router.post('/', (req, res) => {
   const newProduct: Product = req.body;
