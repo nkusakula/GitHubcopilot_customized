@@ -6,6 +6,7 @@ export interface CartItem {
   description: string;
   price: number;
   imgName: string;
+  // Supports decimal (0.15) or percentage (15). Values are clamped to [0, 1] after normalization.
   discount?: number;
   quantity: number;
 }

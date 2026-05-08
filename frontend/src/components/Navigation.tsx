@@ -9,6 +9,7 @@ export default function Navigation() {
   const { darkMode, toggleTheme } = useTheme();
   const { totalItems } = useCart();
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const cartCountLabel = totalItems > 99 ? '99+' : totalItems.toString();
 
   return (
     <nav className={`${darkMode ? 'bg-dark/95' : 'bg-white/95'} backdrop-blur-sm fixed w-full z-50 shadow-md transition-colors duration-300`}>
@@ -83,7 +84,7 @@ export default function Navigation() {
               </svg>
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
-                  {totalItems}
+                  {cartCountLabel}
                 </span>
               )}
             </Link>
