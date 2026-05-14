@@ -32,7 +32,7 @@ export default function Products() {
 
   useEffect(() => {
     if (!cartMessage) {
-      return undefined;
+      return;
     }
 
     const timer = window.setTimeout(() => {
@@ -182,8 +182,6 @@ export default function Products() {
                         </button>
                         <span
                           className={`${darkMode ? 'text-light' : 'text-gray-800'} min-w-[2rem] text-center transition-colors duration-300`}
-                          aria-live="polite"
-                          aria-atomic="true"
                           id={`qty-${product.productId}`}
                         >
                           <span className="sr-only">{`${product.name} quantity `}</span>
