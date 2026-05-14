@@ -2,18 +2,15 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { api } from '../../../api/config';
+import { useCart } from '../../../context/CartContext';
 import { useTheme } from '../../../context/ThemeContext';
+import { CartProduct } from '../../../context/cartUtils';
 
-interface Product {
-  productId: number;
-  name: string;
+interface Product extends CartProduct {
   description: string;
-  price: number;
-  imgName: string;
   sku: string;
   unit: string;
   supplierId: number;
-  discount?: number;
 }
 
 const fetchProducts = async (): Promise<Product[]> => {
@@ -27,6 +24,7 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showModal, setShowModal] = useState(false);
   const { data: products, isLoading, error } = useQuery('products', fetchProducts);
+  const { addToCart } = useCart();
   const { darkMode } = useTheme();
 
   const filteredProducts = products?.filter(product => 
@@ -43,8 +41,14 @@ export default function Products() {
 
   const handleAddToCart = (productId: number) => {
     const quantity = quantities[productId] || 0;
+    const product = products?.find(item => item.productId === productId);
+
+    if (!product) {
+      return;
+    }
+
     if (quantity > 0) {
-      // TODO: Implement cart functionality
+      addToCart(product, quantity);
       alert(`Added ${quantity} items to cart`);
       setQuantities(prev => ({
         ...prev,
