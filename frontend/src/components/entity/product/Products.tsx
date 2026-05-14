@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import { api } from '../../../api/config';
@@ -23,9 +23,22 @@ export default function Products() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [cartMessage, setCartMessage] = useState<string | null>(null);
   const { data: products, isLoading, error } = useQuery('products', fetchProducts);
   const { addToCart } = useCart();
   const { darkMode } = useTheme();
+
+  useEffect(() => {
+    if (!cartMessage) {
+      return undefined;
+    }
+
+    const timer = window.setTimeout(() => {
+      setCartMessage(null);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [cartMessage]);
 
   const filteredProducts = products?.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,7 +62,7 @@ export default function Products() {
 
     if (quantity > 0) {
       addToCart(product, quantity);
-      alert(`Added ${quantity} items to cart`);
+      setCartMessage(`Added ${quantity} ${quantity === 1 ? 'item' : 'items'} to cart`);
       setQuantities(prev => ({
         ...prev,
         [productId]: 0
@@ -89,6 +102,15 @@ export default function Products() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col space-y-6">
           <h1 className={`text-3xl font-bold ${darkMode ? 'text-light' : 'text-gray-800'} transition-colors duration-300`}>Products</h1>
+
+          {cartMessage && (
+            <div
+              className={`${darkMode ? 'bg-primary/20 text-light border-primary/40' : 'bg-primary/10 text-gray-800 border-primary/30'} border rounded-lg px-4 py-3 transition-colors duration-300`}
+              role="status"
+            >
+              {cartMessage}
+            </div>
+          )}
           
           <div className="relative">
             <input

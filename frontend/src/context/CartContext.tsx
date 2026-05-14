@@ -38,7 +38,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       },
       removeFromCart: (productId: number) => {
         setItems(currentItems =>
-          currentItems.filter(item => item.productId !== productId)
+          updateCartItemQuantity(currentItems, productId, 0)
         );
       },
     };
