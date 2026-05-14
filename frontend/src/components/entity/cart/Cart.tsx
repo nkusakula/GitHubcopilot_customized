@@ -85,6 +85,7 @@ export default function Cart() {
                             aria-live="polite"
                             aria-atomic="true"
                           >
+                            <span className="sr-only">{`${item.name} quantity `}</span>
                             {item.quantity}
                           </span>
                           <button

@@ -180,12 +180,13 @@ export default function Products() {
                         >
                           <span aria-hidden="true">-</span>
                         </button>
-                        <span 
+                        <span
                           className={`${darkMode ? 'text-light' : 'text-gray-800'} min-w-[2rem] text-center transition-colors duration-300`}
                           aria-live="polite"
                           aria-atomic="true"
                           id={`qty-${product.productId}`}
                         >
+                          <span className="sr-only">{`${product.name} quantity `}</span>
                           {quantities[product.productId] || 0}
                         </span>
                         <button 
