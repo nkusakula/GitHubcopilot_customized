@@ -4,7 +4,7 @@ import { useTheme } from '../../../context/ThemeContext';
 import { getCartItemUnitPrice } from '../../../context/cartUtils';
 
 export default function Cart() {
-  const { items, totalAmount, updateQuantity, removeFromCart } = useCart();
+  const { items, totalAmount, totalItems, updateQuantity, removeFromCart } = useCart();
   const { darkMode } = useTheme();
 
   return (
@@ -112,7 +112,10 @@ export default function Cart() {
                   ${totalAmount.toFixed(2)}
                 </span>
               </div>
-              <button className="w-full bg-primary hover:bg-accent text-white py-3 rounded-lg transition-colors">
+              <button
+                className="w-full bg-primary hover:bg-accent text-white py-3 rounded-lg transition-colors"
+                aria-label={`Proceed to checkout with ${totalItems} items`}
+              >
                 Checkout
               </button>
             </aside>
