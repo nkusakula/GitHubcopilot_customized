@@ -3,6 +3,7 @@ import {
   addCartItem,
   CartItem,
   getCartTotals,
+  getCartItemUnitPrice,
   updateCartItemQuantity,
 } from './cartUtils';
 
@@ -44,5 +45,17 @@ describe('cartUtils', () => {
       totalItems: 3,
       totalAmount: 210,
     });
+  });
+
+  it('returns the discounted unit price when a discount exists', () => {
+    expect(getCartItemUnitPrice(baseItem)).toBe(80);
+    expect(
+      getCartItemUnitPrice({
+        productId: 2,
+        name: 'Copilot Mouse',
+        imgName: 'mouse.png',
+        price: 50,
+      })
+    ).toBe(50);
   });
 });
