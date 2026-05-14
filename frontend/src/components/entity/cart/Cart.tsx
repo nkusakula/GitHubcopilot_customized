@@ -82,7 +82,8 @@ export default function Cart() {
                           </button>
                           <span
                             className={`${darkMode ? 'text-light' : 'text-gray-800'} min-w-[2rem] text-center transition-colors duration-300`}
-                            aria-label={`Quantity of ${item.name}`}
+                            aria-live="polite"
+                            aria-atomic="true"
                           >
                             {item.quantity}
                           </span>

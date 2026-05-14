@@ -13,6 +13,8 @@ interface Product extends CartProduct {
   supplierId: number;
 }
 
+const CART_MESSAGE_DISPLAY_DURATION_MS = 3000;
+
 const fetchProducts = async (): Promise<Product[]> => {
   const { data } = await axios.get(`${api.baseURL}${api.endpoints.products}`);
   return data;
@@ -35,7 +37,7 @@ export default function Products() {
 
     const timer = window.setTimeout(() => {
       setCartMessage(null);
-    }, 3000);
+    }, CART_MESSAGE_DISPLAY_DURATION_MS);
 
     return () => window.clearTimeout(timer);
   }, [cartMessage]);
@@ -180,7 +182,8 @@ export default function Products() {
                         </button>
                         <span 
                           className={`${darkMode ? 'text-light' : 'text-gray-800'} min-w-[2rem] text-center transition-colors duration-300`}
-                          aria-label={`Quantity of ${product.name}`}
+                          aria-live="polite"
+                          aria-atomic="true"
                           id={`qty-${product.productId}`}
                         >
                           {quantities[product.productId] || 0}
