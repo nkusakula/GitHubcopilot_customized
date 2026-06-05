@@ -18,7 +18,7 @@ function ThemedApp() {
     <Router>
       <div className={`flex flex-col min-h-screen ${darkMode ? 'bg-dark' : 'bg-gray-100'} transition-colors duration-300`}>
         <Navigation />
-        <main className="flex-grow">
+        <main className="flex-grow pt-16">
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/about" element={<About />} />
