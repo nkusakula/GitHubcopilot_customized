@@ -2,12 +2,10 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useState } from 'react';
-import { useCart } from '../context/CartContext';
 
 export default function Navigation() {
   const { isLoggedIn, isAdmin, logout } = useAuth();
   const { darkMode, toggleTheme } = useTheme();
-  const { itemCount } = useCart();
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
 
   return (
@@ -17,7 +15,7 @@ export default function Navigation() {
           <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/images/copilot.png" 
+                src="/copilot.png" 
                 alt="Copilot icon"
                 className="h-8 w-auto"
               />
@@ -70,20 +68,6 @@ export default function Navigation() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Link
-              to="/cart"
-              aria-label={`Shopping cart, ${itemCount} ${itemCount === 1 ? 'item' : 'items'}`}
-              className={`${darkMode ? 'text-light hover:text-primary' : 'text-gray-700 hover:text-primary'} relative p-2 transition-colors`}
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l2.4 12.2a2 2 0 002 1.6h8.8a2 2 0 002-1.6L22 7H6" />
-                <circle cx="10" cy="21" r="1" />
-                <circle cx="18" cy="21" r="1" />
-              </svg>
-              <span className="absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 rounded-full bg-primary text-white text-xs flex items-center justify-center">
-                {itemCount}
-              </span>
-            </Link>
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full focus:outline-none transition-colors"

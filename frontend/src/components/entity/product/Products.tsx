@@ -3,8 +3,18 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 import { api } from '../../../api/config';
 import { useTheme } from '../../../context/ThemeContext';
-import { useCart } from '../../../context/CartContext';
-import { Product } from '../../../types/Product';
+
+interface Product {
+  productId: number;
+  name: string;
+  description: string;
+  price: number;
+  imgName: string;
+  sku: string;
+  unit: string;
+  supplierId: number;
+  discount?: number;
+}
 
 const fetchProducts = async (): Promise<Product[]> => {
   const { data } = await axios.get(`${api.baseURL}${api.endpoints.products}`);
@@ -18,7 +28,6 @@ export default function Products() {
   const [showModal, setShowModal] = useState(false);
   const { data: products, isLoading, error } = useQuery('products', fetchProducts);
   const { darkMode } = useTheme();
-  const { addToCart } = useCart();
 
   const filteredProducts = products?.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -32,13 +41,14 @@ export default function Products() {
     }));
   };
 
-  const handleAddToCart = (product: Product) => {
-    const quantity = quantities[product.productId] || 0;
+  const handleAddToCart = (productId: number) => {
+    const quantity = quantities[productId] || 0;
     if (quantity > 0) {
-      addToCart(product, quantity);
+      // TODO: Implement cart functionality
+      alert(`Added ${quantity} items to cart`);
       setQuantities(prev => ({
         ...prev,
-        [product.productId]: 0
+        [productId]: 0
       }));
     }
   };
@@ -106,7 +116,7 @@ export default function Products() {
                   onClick={() => handleProductClick(product)}
                 >
                   <img 
-                    src={`/images/${product.imgName}`} 
+                    src={`/${product.imgName}`} 
                     alt={product.name}
                     className="w-full h-full object-contain p-2"
                   />
@@ -159,7 +169,7 @@ export default function Products() {
                         </button>
                       </div>
                       <button 
-                        onClick={() => handleAddToCart(product)}
+                        onClick={() => handleAddToCart(product.productId)}
                         className={`px-4 py-2 rounded-lg transition-colors ${
                           quantities[product.productId] 
                             ? 'bg-primary hover:bg-accent text-white' 
@@ -199,7 +209,7 @@ export default function Products() {
             </div>
             <div className={`${darkMode ? 'bg-gradient-to-t from-gray-700 to-gray-800' : 'bg-gradient-to-t from-gray-100 to-white'} rounded-lg mb-6 p-4`}>
               <img 
-                src={`/images/${selectedProduct.imgName}`} 
+                src={`/${selectedProduct.imgName}`} 
                 alt={selectedProduct.name}
                 className="w-full h-auto object-contain max-h-[400px]"
               />
